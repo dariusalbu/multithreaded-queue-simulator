@@ -41,4 +41,8 @@ public class Server implements Runnable {
     public BlockingQueue<Task> getTasks() {
         return tasks;
     }
+
+    public AtomicInteger getWaitingPeriod() {
+        return waitingPeriod;
+    }
 }
