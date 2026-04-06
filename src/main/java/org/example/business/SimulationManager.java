@@ -8,8 +8,8 @@ import java.util.List;
 public class SimulationManager {
     private Scheduler scheduler;
     private SimulationFrame frame;
-    List<Task> tasks;
-    Scheduler.SelectionPolicy selectionPolicy;
+    private List<Task> tasks;
+    private Scheduler.SelectionPolicy selectionPolicy;
 
     public void generateRandomTasks() {
 
