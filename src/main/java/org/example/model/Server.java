@@ -22,15 +22,17 @@ public class Server implements Runnable {
     public void run() {
         while (true) {
             try {
-                Task task = this.tasks.take();
+                Task task = this.tasks.peek();
 
-                while (task.getServiceTime() > 0) {
-                    Thread.sleep(1000);
+                if (task != null) {
+                    while (task.getServiceTime() > 0) {
+                        Thread.sleep(1000);
 
-                    waitingPeriod.decrementAndGet();
-                    task.setServiceTime(task.getServiceTime() - 1);
+                        waitingPeriod.decrementAndGet();
+                        task.setServiceTime(task.getServiceTime() - 1);
+                    }
+                    this.tasks.poll();
                 }
-
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

@@ -34,4 +34,13 @@ public class Task {
     public void setServiceTime(int serviceTime) {
         this.serviceTime = serviceTime;
     }
+
+    @Override
+    public String toString() {
+        return "(" +
+                id + "," +
+                arrivalTime + "," +
+                serviceTime +
+                ')';
+    }
 }
