@@ -22,7 +22,6 @@ public class Scheduler {
             servers.add(server);
 
             Thread thread = new Thread(server);
-            thread.setDaemon(true);
             thread.start();
         }
     }
