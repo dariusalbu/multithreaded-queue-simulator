@@ -52,7 +52,7 @@ public class SimulationManager implements Runnable {
         int currentTime = 0;
         float totalWaitingTime = 0;
 
-        while (currentTime < timeLimit) {
+        while (currentTime < timeLimit && !emptyWaitingLists()) {
             Iterator<Task> iterator = tasks.iterator();
             while (iterator.hasNext()) {
                 Task task = iterator.next();
@@ -82,6 +82,18 @@ public class SimulationManager implements Runnable {
         }
 
         System.out.println("Average Waiting Time: " + totalWaitingTime / numberOfClients);
+    }
+
+    boolean emptyWaitingLists() {
+        boolean empty = true;
+
+        for (Server server : scheduler.getServers()) {
+            if (!server.getTasks().isEmpty()) {
+                empty = false;
+            }
+        }
+
+        return empty && tasks.isEmpty();
     }
 
     void printWaitingTasks() {
