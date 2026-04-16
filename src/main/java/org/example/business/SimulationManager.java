@@ -50,7 +50,11 @@ public class SimulationManager implements Runnable {
     @Override
     public void run() {
         int currentTime = 0;
+        float totalServiceTime = 0;
+        int clientsServed = 0;
         float totalWaitingTime = 0;
+        float maxServerSize = 0;
+        int peakHour = 0;
 
         while (currentTime < timeLimit && !emptyWaitingLists()) {
             Iterator<Task> iterator = tasks.iterator();
@@ -59,13 +63,25 @@ public class SimulationManager implements Runnable {
                 if (task.getArrivalTime() == currentTime) {
                     scheduler.dispatchTask(task);
                     iterator.remove();
+
+                    totalServiceTime += task.getServiceTime();
+                    clientsServed++;
                 }
             }
+
+            int serverSize = 0;
             for (Server server : scheduler.getServers()) {
                 if (!server.getTasks().isEmpty()) {
-                    totalWaitingTime++;
+                    serverSize += server.getTasks().size();
                 }
             }
+
+            if (serverSize > maxServerSize) {
+                maxServerSize = serverSize;
+                peakHour = currentTime;
+            }
+
+            totalWaitingTime += serverSize;
 
             System.out.println("Time " + currentTime);
             printWaitingTasks();
@@ -81,7 +97,9 @@ public class SimulationManager implements Runnable {
             currentTime++;
         }
 
-        System.out.println("Average Waiting Time: " + totalWaitingTime / numberOfClients);
+        System.out.println("Average Service Time: " + totalServiceTime / clientsServed);
+        System.out.println("Total Waiting Time: " + totalWaitingTime / numberOfClients);
+        System.out.println("Peak Hour: " + peakHour);
     }
 
     boolean emptyWaitingLists() {
