@@ -38,8 +38,8 @@ public class Task {
     @Override
     public String toString() {
         return "(" +
-                id + "," +
-                arrivalTime + "," +
+                id + ", " +
+                arrivalTime + ", " +
                 serviceTime +
                 ')';
     }

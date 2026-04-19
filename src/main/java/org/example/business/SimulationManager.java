@@ -2,6 +2,7 @@ package org.example.business;
 
 import org.example.gui.SimulationFrame;
 import org.example.model.Server;
+import org.example.model.SimulationData;
 import org.example.model.Task;
 
 import java.util.*;
@@ -15,22 +16,18 @@ public class SimulationManager implements Runnable {
     public int numberOfServers = 2;
     public int numberOfClients = 4;
 
-    int clientsServed = 0;
-    float totalWaitingTime = 0;
-    float totalServiceTime = 0;
-    float maxServerSize = 0;
-    int peakHour = 0;
-
     private final Scheduler scheduler;
+    SimulationData simulationData;
     private SimulationFrame frame;
     private final List<Task> tasks;
     private Scheduler.SelectionPolicy selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
 
     public SimulationManager() {
         this.scheduler = new Scheduler(numberOfServers, numberOfClients);
+        this.simulationData = new SimulationData();
         this.frame = new SimulationFrame();
         this.tasks = new ArrayList<Task>();
-        this.scheduler.changeStrategy(selectionPolicy);
+        scheduler.changeStrategy(selectionPolicy);
 
         generateRandomTasks();
     }
@@ -55,13 +52,14 @@ public class SimulationManager implements Runnable {
 
     @Override
     public void run() {
-        int currentTime = 0;
+        boolean running = true;
 
-        while (currentTime < timeLimit && !emptyWaitingLists()) {
-            manageTask(currentTime);
-            computeWaitingTimeAndPeakHour(currentTime);
+        while (simulationData.getCurrentTime() < timeLimit) {
+            manageTask(simulationData.getCurrentTime());
+            computeWaitingTimeAndPeakHour(simulationData.getCurrentTime());
 
-            System.out.println("Time " + currentTime);
+            frame.update(scheduler, tasks, simulationData);
+            System.out.println("Time " + simulationData.getCurrentTime());
             printWaitingTasks();
             printStatus();
             System.out.println();
@@ -73,12 +71,17 @@ public class SimulationManager implements Runnable {
                 break;
             }
 
-            currentTime++;
+            simulationData.setCurrentTime(simulationData.getCurrentTime() + 1);
+
+            if (emptyWaitingLists() && running) {
+                timeLimit = simulationData.getCurrentTime() + 1;
+                running = false;
+            }
         }
 
-        System.out.println("Average Service Time: " + totalServiceTime / clientsServed);
-        System.out.println("Total Waiting Time: " + totalWaitingTime / numberOfClients);
-        System.out.println("Peak Hour: " + peakHour);
+        System.out.println("Average Service Time: " + simulationData.getTotalServiceTime() / simulationData.getClientsServed());
+        System.out.println("Total Waiting Time: " + simulationData.getTotalWaitingTime() / numberOfClients);
+        System.out.println("Peak Hour: " + simulationData.getPeakHour());
 
         scheduler.shutdown();
     }
@@ -92,8 +95,8 @@ public class SimulationManager implements Runnable {
                 scheduler.dispatchTask(task);
                 iterator.remove();
 
-                totalServiceTime += task.getServiceTime();
-                clientsServed++;
+                simulationData.setTotalServiceTime(simulationData.getTotalServiceTime() + task.getServiceTime());
+                simulationData.setClientsServed(simulationData.getClientsServed() + 1);
             }
         }
     }
@@ -107,12 +110,12 @@ public class SimulationManager implements Runnable {
             }
         }
 
-        if (serverSize > maxServerSize) {
-            maxServerSize = serverSize;
-            peakHour = currentTime;
+        if (serverSize > simulationData.getMaxServerSize()) {
+            simulationData.setMaxServerSize(serverSize);
+            simulationData.setPeakHour(currentTime);
         }
 
-        totalWaitingTime += serverSize;
+        simulationData.setTotalWaitingTime(simulationData.getTotalWaitingTime() + serverSize);
     }
 
     boolean emptyWaitingLists() {
