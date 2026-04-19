@@ -100,6 +100,8 @@ public class SimulationManager implements Runnable {
         System.out.println("Average Service Time: " + totalServiceTime / clientsServed);
         System.out.println("Total Waiting Time: " + totalWaitingTime / numberOfClients);
         System.out.println("Peak Hour: " + peakHour);
+
+        scheduler.shutdown();
     }
 
     boolean emptyWaitingLists() {
