@@ -18,7 +18,7 @@ public class SimulationManager implements Runnable {
 
     private final Scheduler scheduler;
     SimulationData simulationData;
-    private SimulationFrame frame;
+    private final SimulationFrame frame;
     private final List<Task> tasks;
     private Scheduler.SelectionPolicy selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
 
