@@ -56,7 +56,7 @@ public class SimulationManager implements Runnable {
             manageTask(simulationData.getCurrentTime());
             computeWaitingTimeAndPeakHour(simulationData.getCurrentTime());
 
-            frame.update(scheduler);
+            frame.update(scheduler, tasks, simulationData);
             System.out.println("Time " + simulationData.getCurrentTime());
             printWaitingTasks();
             printStatus();

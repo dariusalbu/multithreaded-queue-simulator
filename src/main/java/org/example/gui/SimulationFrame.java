@@ -1,8 +1,11 @@
 package org.example.gui;
 
 import org.example.business.Scheduler;
+import org.example.model.SimulationData;
+import org.example.model.Task;
 
 import javax.swing.*;
+import java.util.List;
 
 public class SimulationFrame extends JFrame {
     private JPanel mainJPanel;
@@ -15,6 +18,7 @@ public class SimulationFrame extends JFrame {
         setVisible(true);
     }
 
-    public void update(Scheduler scheduler) {
+    public void update(Scheduler scheduler, List<Task> task, SimulationData simulationData) {
+
     }
 }
