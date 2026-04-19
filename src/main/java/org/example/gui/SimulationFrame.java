@@ -1,5 +1,7 @@
 package org.example.gui;
 
+import org.example.business.Scheduler;
+
 import javax.swing.*;
 
 public class SimulationFrame extends JFrame {
@@ -11,5 +13,8 @@ public class SimulationFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public void update(Scheduler scheduler) {
     }
 }
