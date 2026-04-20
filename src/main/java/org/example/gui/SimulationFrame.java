@@ -7,6 +7,8 @@ import org.example.model.Task;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class SimulationFrame extends JFrame {
@@ -15,6 +17,12 @@ public class SimulationFrame extends JFrame {
     private JPanel waitingClientsJPanel;
     private JLabel timeJLabel;
     private JPanel queuesJPanel;
+    private JButton statisticsButton;
+    private JPanel statisticsJPanel;
+    private JLabel averageServiceTimeLabel;
+    private JLabel totalWaitingTimeLabel;
+    private JLabel peakHourLabel;
+    private JPanel showStatisticsJPanel;
     private JTextField timeTextField;
 
     public SimulationFrame() {
@@ -38,7 +46,8 @@ public class SimulationFrame extends JFrame {
         waitingClientsJPanel.revalidate();
         waitingClientsJPanel.repaint();
 
-        int queueCounter = 0;
+        int queueCounter = 1;
+        boolean emptyQueues = true;
         queuesJPanel.removeAll();
         queuesJPanel.setLayout(new BoxLayout(queuesJPanel, BoxLayout.Y_AXIS));
         for (Server server : scheduler.getServers()) {
@@ -51,6 +60,7 @@ public class SimulationFrame extends JFrame {
             for (Task taskItem : server.getTasks()) {
                 JButton taskBox2 = new JButton(taskItem.toString());
                 panel.add(taskBox2);
+                emptyQueues = false;
             }
 
             queueCounter++;
@@ -58,5 +68,23 @@ public class SimulationFrame extends JFrame {
 
         queuesJPanel.revalidate();
         queuesJPanel.repaint();
+
+        if (emptyQueues && tasks.isEmpty()) {
+            statisticsJPanel.setVisible(true);
+            statisticsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (showStatisticsJPanel.isVisible()) {
+                        showStatisticsJPanel.setVisible(false);
+                    }
+                    else {
+                        averageServiceTimeLabel.setText("Average Service Time: " + simulationData.getCurrentTime() / simulationData.getClientsServed());
+                        totalWaitingTimeLabel.setText("Total Waiting Time: " + simulationData.getTotalWaitingTime() / simulationData.getClientsServed());
+                        peakHourLabel.setText("Peak Hour: " + simulationData.getPeakHour());
+                        showStatisticsJPanel.setVisible(true);
+                    }
+                }
+            });
+        }
     }
 }

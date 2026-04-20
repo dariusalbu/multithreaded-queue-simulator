@@ -9,14 +9,24 @@ public class SimulationData {
     private float maxServerSize;
     private int peakHour;
     private int currentTime;
+    private int numberOfClients;
 
-    public SimulationData() {
+    public SimulationData(int numberOfClients) {
+        this.numberOfClients = numberOfClients;
         this.clientsServed = 0;
         this.totalWaitingTime = 0;
         this.totalServiceTime = 0;
         this.maxServerSize = 0;
         this.peakHour = 0;
         this.currentTime = 0;
+    }
+
+    public int getNumberOfClients() {
+        return numberOfClients;
+    }
+
+    public void setNumberOfClients(int numberOfClients) {
+        this.numberOfClients = numberOfClients;
     }
 
     public int getClientsServed() {

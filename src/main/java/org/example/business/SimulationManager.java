@@ -24,7 +24,7 @@ public class SimulationManager implements Runnable {
 
     public SimulationManager() {
         this.scheduler = new Scheduler(numberOfServers, numberOfClients);
-        this.simulationData = new SimulationData();
+        this.simulationData = new SimulationData(numberOfClients);
         this.frame = new SimulationFrame();
         this.tasks = new ArrayList<Task>();
         scheduler.changeStrategy(selectionPolicy);
