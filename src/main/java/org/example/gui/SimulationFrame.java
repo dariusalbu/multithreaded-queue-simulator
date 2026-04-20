@@ -22,6 +22,7 @@ public class SimulationFrame extends JFrame {
     private JTextField numberOfServersJTextField;
     private JTextField numberOfClientsJTextField;
     private JTextField timeLimitJTextField;
+    SimulationPanel simulationPanel;
 
     public SimulationFrame() {
         setContentPane(mainJPanel);
@@ -31,6 +32,9 @@ public class SimulationFrame extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
 
+        simulationPanel = new SimulationPanel();
+        simulationPanel.setSize( 800, 600);
+        simulationJPanel.setViewportView(simulationPanel);
 
         runButton.addActionListener(new ActionListener() {
             @Override
@@ -44,6 +48,8 @@ public class SimulationFrame extends JFrame {
 
     public void update(Scheduler scheduler, List<Task> tasks, SimulationData simulationData) {
 
+
+        simulationPanel.updateData(scheduler, tasks, simulationData);
     }
 
     public void takeInputData() {
