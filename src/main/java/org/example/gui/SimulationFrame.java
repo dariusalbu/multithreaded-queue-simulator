@@ -13,7 +13,7 @@ import java.util.List;
 public class SimulationFrame extends JFrame {
     private JPanel mainJPanel;
     private JScrollPane dataInputJPanel;
-    private JScrollPane simulationJPanel;
+    private JScrollPane simulationCardJPanel;
     private JButton runButton;
     private JTextField maxArrivalTimeTextField;
     private JTextField minArrivalTimeJTextField;
@@ -22,6 +22,12 @@ public class SimulationFrame extends JFrame {
     private JTextField numberOfServersJTextField;
     private JTextField numberOfClientsJTextField;
     private JTextField timeLimitJTextField;
+    private JLabel currentTimeLabel;
+    private JScrollPane simulationPanelJScrollPane;
+    private JPanel statisticsJPanel;
+    private JLabel averageServiceTimeLabel;
+    private JLabel averageWaitingTimeLabel;
+    private JLabel peakHourLabel;
     SimulationPanel simulationPanel;
 
     public SimulationFrame() {
@@ -34,7 +40,7 @@ public class SimulationFrame extends JFrame {
 
         simulationPanel = new SimulationPanel();
         simulationPanel.setSize( 800, 600);
-        simulationJPanel.setViewportView(simulationPanel);
+        simulationPanelJScrollPane.setViewportView(simulationPanel);
 
         runButton.addActionListener(new ActionListener() {
             @Override
@@ -47,9 +53,19 @@ public class SimulationFrame extends JFrame {
     }
 
     public void update(Scheduler scheduler, List<Task> tasks, SimulationData simulationData) {
+        currentTimeLabel.setText("Current Time: " + simulationData.getCurrentTime());
 
+        simulationPanel.updateData(scheduler, tasks);
 
-        simulationPanel.updateData(scheduler, tasks, simulationData);
+        System.out.println("Simulation Done: " + simulationData.isSimulationDone());
+
+        if (simulationData.isSimulationDone()) {
+            statisticsJPanel.setVisible(true);
+
+            averageWaitingTimeLabel.setText("Average Service Time: " + simulationData.getTotalServiceTime() / simulationData.getNumberOfClients());
+            averageServiceTimeLabel.setText("Average Waiting time: " + simulationData.getTotalWaitingTime() / simulationData.getNumberOfClients());
+            peakHourLabel.setText("Peak Hour: " + simulationData.getPeakHour());
+        }
     }
 
     public void takeInputData() {

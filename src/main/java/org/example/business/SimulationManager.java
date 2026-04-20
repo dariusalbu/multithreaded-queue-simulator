@@ -52,9 +52,7 @@ public class SimulationManager implements Runnable {
 
     @Override
     public void run() {
-        boolean running = true;
-
-        while (simulationData.getCurrentTime() < timeLimit) {
+        while (simulationData.getCurrentTime() < timeLimit && !emptyWaitingLists()) {
             manageTask(simulationData.getCurrentTime());
             computeWaitingTimeAndPeakHour(simulationData.getCurrentTime());
 
@@ -72,15 +70,13 @@ public class SimulationManager implements Runnable {
             }
 
             simulationData.setCurrentTime(simulationData.getCurrentTime() + 1);
-
-            if (emptyWaitingLists() && running) {
-                timeLimit = simulationData.getCurrentTime() + 1;
-                running = false;
-            }
         }
 
+        simulationData.setSimulationDone(true);
+        frame.update(scheduler, tasks, simulationData);
+
         System.out.println("Average Service Time: " + simulationData.getTotalServiceTime() / simulationData.getClientsServed());
-        System.out.println("Total Waiting Time: " + simulationData.getTotalWaitingTime() / numberOfClients);
+        System.out.println("Average Waiting Time: " + simulationData.getTotalWaitingTime() / numberOfClients);
         System.out.println("Peak Hour: " + simulationData.getPeakHour());
 
         scheduler.shutdown();

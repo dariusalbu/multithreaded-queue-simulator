@@ -10,6 +10,7 @@ public class SimulationData {
     private int peakHour;
     private int currentTime;
     private int numberOfClients;
+    private boolean simulationDone;
 
     public SimulationData(int numberOfClients) {
         this.numberOfClients = numberOfClients;
@@ -19,6 +20,15 @@ public class SimulationData {
         this.maxServerSize = 0;
         this.peakHour = 0;
         this.currentTime = 0;
+        simulationDone = false;
+    }
+
+    public boolean isSimulationDone() {
+        return simulationDone;
+    }
+
+    public void setSimulationDone(boolean simulationDone) {
+        this.simulationDone = simulationDone;
     }
 
     public int getNumberOfClients() {
