@@ -13,7 +13,7 @@ public class SimulationPanel extends JPanel {
     private Scheduler scheduler;
     private List<Task> tasks;
 
-    private final int rectangleWidth = 60;
+    private final int rectangleWidth = 80;
     private final int rectangleHeight = 30;
 
     public void updateData(Scheduler scheduler, List<Task> tasks) {
@@ -46,7 +46,7 @@ public class SimulationPanel extends JPanel {
         if (tasks != null && !tasks.isEmpty()) {
             for (Task task : tasks) {
                 drawRectangle(g2d, x, y, task.toString());
-                x += task.toString().length() + rectangleWidth;
+                x += rectangleWidth + 30;
             }
         }
     }
@@ -54,17 +54,17 @@ public class SimulationPanel extends JPanel {
     public void drawQueues(Graphics2D g2d, int x, int y) {
         x = 0;
         y += 60;
-        int queueNumber = 0;
+        int queueNumber = 1;
 
         if (scheduler != null) {
             for (Server server : scheduler.getServers()) {
                 String queue = "Queue " + queueNumber + ": ";
                 drawRectangle(g2d, x, y, queue);
-                x += rectangleWidth + queue.length();
+                x += rectangleWidth + 30;
 
                 for (Task task : server.getTasks()) {
                     drawRectangle(g2d, x, y, task.toString());
-                    x += rectangleWidth + task.toString().length() + 20;
+                    x += rectangleWidth + 30;
                 }
 
                 x = 0;
@@ -84,5 +84,35 @@ public class SimulationPanel extends JPanel {
 
         g2d.setColor(Color.WHITE);
         g2d.drawString(text, x + (rectangleWidth - g2d.getFontMetrics().stringWidth(text)) / 2, y + 20);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        int width = 0;
+        int height = 0;
+
+        if (scheduler != null) {
+            int rows = (rectangleHeight + 20) * (scheduler.getServers().size() + 1);
+            int cols = 0;
+            int maxTasks = tasks.size();
+
+            for (Server server : scheduler.getServers()) {
+                if (maxTasks < server.getTasks().size()) {
+                    maxTasks = server.getTasks().size();
+                }
+            }
+
+            cols = (rectangleWidth + 30) * (maxTasks);
+
+            if (rows > height) {
+                height = rows;
+            }
+
+            if (cols > width) {
+                width = cols;
+            }
+        }
+
+        return new Dimension(width, height);
     }
 }
