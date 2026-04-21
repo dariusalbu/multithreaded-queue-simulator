@@ -30,7 +30,7 @@ public class SimulationManager implements Runnable {
         this.maxProcessingTime = maxProcessingTime;
         this.timeLimit = timeLimit;
         this.scheduler = new Scheduler(numberOfServers, numberOfClients);
-        this.simulationData = new SimulationData(numberOfClients);
+        this.simulationData = new SimulationData();
         this.tasks = new ArrayList<Task>();
         this.frame = simulationFrame;
         scheduler.changeStrategy(selectionPolicy);

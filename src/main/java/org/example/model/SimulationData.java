@@ -1,76 +1,71 @@
 package org.example.model;
 
+import com.sun.tools.attach.AttachPermission;
 import org.example.business.Scheduler;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class SimulationData {
-    private int clientsServed;
-    private float totalWaitingTime;
-    private float totalServiceTime;
+    private final AtomicInteger clientsServed;
+    private final AtomicInteger waitingClientsNumber;
+    private final AtomicInteger totalWaitingTime;
+    private final AtomicInteger totalServiceTime;
+    private final AtomicInteger currentTime;
+    private final AtomicBoolean simulationDone;
+
     private float maxServerSize;
     private int peakHour;
-    private int currentTime;
-    private int numberOfClients;
-    private boolean simulationDone;
-    private int waitingClientsNumber;
 
-    public SimulationData(int numberOfClients) {
-        this.numberOfClients = numberOfClients;
-        this.clientsServed = 0;
-        this.totalWaitingTime = 0;
-        this.totalServiceTime = 0;
+    public SimulationData() {
+        this.clientsServed = new AtomicInteger(0);
+        this.totalWaitingTime = new AtomicInteger(0);
+        this.totalServiceTime = new AtomicInteger(0);
         this.maxServerSize = 0;
         this.peakHour = 0;
-        this.currentTime = 0;
-        this.waitingClientsNumber = 0;
-        simulationDone = false;
+        this.currentTime = new AtomicInteger(0);
+        this.waitingClientsNumber = new AtomicInteger(0);
+        simulationDone = new AtomicBoolean(false);
     }
 
-    public int getWaitingClientsNumber() {
-        return waitingClientsNumber;
+    public synchronized int getWaitingClientsNumber() {
+        return waitingClientsNumber.get();
     }
 
     public void setWaitingClientsNumber(int waitingClientsNumber) {
-        this.waitingClientsNumber = waitingClientsNumber;
+        this.waitingClientsNumber.set(waitingClientsNumber);
     }
 
     public boolean isSimulationDone() {
-        return simulationDone;
+        return simulationDone.get();
     }
 
     public void setSimulationDone(boolean simulationDone) {
-        this.simulationDone = simulationDone;
-    }
-
-    public int getNumberOfClients() {
-        return numberOfClients;
-    }
-
-    public void setNumberOfClients(int numberOfClients) {
-        this.numberOfClients = numberOfClients;
+        this.simulationDone.set(simulationDone);
     }
 
     public int getClientsServed() {
-        return clientsServed;
+        return clientsServed.get();
     }
 
     public void setClientsServed(int clientsServed) {
-        this.clientsServed = clientsServed;
+        this.clientsServed.set(clientsServed);
     }
 
-    public float getTotalWaitingTime() {
-        return totalWaitingTime;
+    public int getTotalWaitingTime() {
+        return totalWaitingTime.get();
     }
 
-    public void setTotalWaitingTime(float totalWaitingTime) {
-        this.totalWaitingTime = totalWaitingTime;
+    public void setTotalWaitingTime(int totalWaitingTime) {
+        this.totalWaitingTime.set(totalWaitingTime);
     }
 
-    public float getTotalServiceTime() {
-        return totalServiceTime;
+    public int getTotalServiceTime() {
+        return totalServiceTime.get();
     }
 
-    public void setTotalServiceTime(float totalServiceTime) {
-        this.totalServiceTime = totalServiceTime;
+    public void setTotalServiceTime(int totalServiceTime) {
+        this.totalServiceTime.set(totalServiceTime);
     }
 
     public float getMaxServerSize() {
@@ -90,10 +85,10 @@ public class SimulationData {
     }
 
     public int getCurrentTime() {
-        return currentTime;
+        return currentTime.intValue();
     }
 
     public void setCurrentTime(int currentTime) {
-        this.currentTime = currentTime;
+        this.currentTime.set(currentTime);
     }
 }
