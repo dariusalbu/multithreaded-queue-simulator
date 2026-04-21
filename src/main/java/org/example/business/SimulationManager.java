@@ -83,7 +83,7 @@ public class SimulationManager implements Runnable {
         frame.update(scheduler, tasks, simulationData);
 
         System.out.println("Average Service Time: " + simulationData.getTotalServiceTime() / simulationData.getClientsServed());
-        System.out.println("Average Waiting Time: " + simulationData.getTotalWaitingTime() / numberOfClients);
+        System.out.println("Average Waiting Time: " + simulationData.getTotalWaitingTime() / simulationData.getWaitingClientsNumber());
         System.out.println("Peak Hour: " + simulationData.getPeakHour());
 
         scheduler.shutdown();
@@ -97,7 +97,8 @@ public class SimulationManager implements Runnable {
             if (task.getArrivalTime() == currentTime) {
                 Server server = scheduler.getBestServer();
                 if (server != null) {
-                    simulationData.setTotalWaitingTime(simulationData.getTotalWaitingTime() + 1);
+                    simulationData.setWaitingClientsNumber(simulationData.getWaitingClientsNumber() + 1);
+                    simulationData.setTotalWaitingTime(simulationData.getTotalWaitingTime() + server.getTasks().size());
                 }
                 scheduler.dispatchTask(task);
                 iterator.remove();

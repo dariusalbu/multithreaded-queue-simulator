@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.business.SimulationManager;
 import org.example.gui.SimulationFrame;
 
 import java.awt.*;

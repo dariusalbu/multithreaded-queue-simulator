@@ -11,6 +11,7 @@ public class SimulationData {
     private int currentTime;
     private int numberOfClients;
     private boolean simulationDone;
+    private int waitingClientsNumber;
 
     public SimulationData(int numberOfClients) {
         this.numberOfClients = numberOfClients;
@@ -20,7 +21,16 @@ public class SimulationData {
         this.maxServerSize = 0;
         this.peakHour = 0;
         this.currentTime = 0;
+        this.waitingClientsNumber = 0;
         simulationDone = false;
+    }
+
+    public int getWaitingClientsNumber() {
+        return waitingClientsNumber;
+    }
+
+    public void setWaitingClientsNumber(int waitingClientsNumber) {
+        this.waitingClientsNumber = waitingClientsNumber;
     }
 
     public boolean isSimulationDone() {
