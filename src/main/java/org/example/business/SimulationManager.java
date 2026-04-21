@@ -8,13 +8,13 @@ import org.example.model.Task;
 import java.util.*;
 
 public class SimulationManager implements Runnable {
-    public int timeLimit = 60;
-    public int maxArrivalTime = 30;
-    public int minArrivalTime = 2;
-    public int maxProcessingTime = 4;
-    public int minProcessingTime = 2;
-    public int numberOfServers = 2;
-    public int numberOfClients = 4;
+    public int timeLimit;
+    public int maxArrivalTime;
+    public int minArrivalTime;
+    public int maxProcessingTime;
+    public int minProcessingTime;
+    public int numberOfServers;
+    public int numberOfClients;
 
     SimulationFrame frame;
     private final Scheduler scheduler;
@@ -28,6 +28,7 @@ public class SimulationManager implements Runnable {
         this.maxArrivalTime = maxArrivalTime;
         this.minProcessingTime = minProcessingTime;
         this.maxProcessingTime = maxProcessingTime;
+        this.timeLimit = timeLimit;
         this.scheduler = new Scheduler(numberOfServers, numberOfClients);
         this.simulationData = new SimulationData(numberOfClients);
         this.tasks = new ArrayList<Task>();
