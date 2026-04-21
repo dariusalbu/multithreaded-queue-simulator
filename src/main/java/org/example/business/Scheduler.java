@@ -46,6 +46,8 @@ public class Scheduler {
         strategy.addTask(servers, task);
     }
 
+    public Server getBestServer() {return strategy.getBestServer(servers);}
+
     public List<Server> getServers() {
         return servers;
     }

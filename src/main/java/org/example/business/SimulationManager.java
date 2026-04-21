@@ -61,7 +61,7 @@ public class SimulationManager implements Runnable {
     public void run() {
         while (simulationData.getCurrentTime() < timeLimit && !emptyWaitingLists()) {
             manageTask(simulationData.getCurrentTime());
-            computeWaitingTimeAndPeakHour(simulationData.getCurrentTime());
+            computePeakHour(simulationData.getCurrentTime());
 
             frame.update(scheduler, tasks, simulationData);
             System.out.println("Time " + simulationData.getCurrentTime());
@@ -95,6 +95,10 @@ public class SimulationManager implements Runnable {
         while (iterator.hasNext()) {
             Task task = iterator.next();
             if (task.getArrivalTime() == currentTime) {
+                Server server = scheduler.getBestServer();
+                if (server != null) {
+                    simulationData.setTotalWaitingTime(simulationData.getTotalWaitingTime() + 1);
+                }
                 scheduler.dispatchTask(task);
                 iterator.remove();
 
@@ -104,7 +108,7 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    void computeWaitingTimeAndPeakHour(int currentTime) {
+    void computePeakHour(int currentTime) {
         int serverSize = 0;
 
         for (Server server : scheduler.getServers()) {
@@ -117,8 +121,6 @@ public class SimulationManager implements Runnable {
             simulationData.setMaxServerSize(serverSize);
             simulationData.setPeakHour(currentTime);
         }
-
-        simulationData.setTotalWaitingTime(simulationData.getTotalWaitingTime() + serverSize);
     }
 
     boolean emptyWaitingLists() {
