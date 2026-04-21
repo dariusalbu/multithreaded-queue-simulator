@@ -1,6 +1,7 @@
 package org.example.gui;
 
 import org.example.business.Scheduler;
+import org.example.business.SimulationManager;
 import org.example.model.SimulationData;
 import org.example.model.Task;
 
@@ -50,6 +51,8 @@ public class SimulationFrame extends JFrame {
                 layout.next(mainJPanel);
             }
         });
+
+        simulationCardJPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     }
 
     public void update(Scheduler scheduler, List<Task> tasks, SimulationData simulationData) {
@@ -69,6 +72,34 @@ public class SimulationFrame extends JFrame {
     }
 
     public void takeInputData() {
+        String numberOfClientsString = numberOfClientsJTextField.getText();
+        String  numberOfServersString = numberOfServersJTextField.getText();
+        String  maxProcessingTimeString = maxProcessingTimeJTextField.getText();
+        String  minProcessingTimeString = minProcessingTimeJTextField.getText();
+        String maxArrivalTimeString = maxArrivalTimeTextField.getText();
+        String minArrivalTimeString = minArrivalTimeJTextField.getText();
+        String timeLimitString = timeLimitJTextField.getText();
 
+        int numberOfClients = !numberOfClientsString.isEmpty() ? Integer.parseInt(numberOfClientsString) : 0;
+        int numberOfServers = !numberOfClientsString.isEmpty() ? Integer.parseInt(numberOfServersString) : 1;
+        int maxArrivalTime = !maxArrivalTimeString.isEmpty() ? Integer.parseInt(maxArrivalTimeString) : 0;
+        int minArrivalTime = !minArrivalTimeString.isEmpty() ? Integer.parseInt(minArrivalTimeString) : 0;
+        int maxProcessingTime = !maxProcessingTimeString.isEmpty() ? Integer.parseInt(maxProcessingTimeString) : 0;
+        int minProcessingTime = !minProcessingTimeString.isEmpty() ? Integer.parseInt(minProcessingTimeString) : 0;
+        int timeLimit = !timeLimitString.isEmpty() ? Integer.parseInt(timeLimitString) : 0;
+
+        SimulationManager simulationManager = new SimulationManager(
+                this,
+                numberOfClients,
+                numberOfServers,
+                timeLimit,
+                minArrivalTime,
+                maxArrivalTime,
+                minProcessingTime,
+                maxProcessingTime
+                );
+
+        Thread t = new Thread(simulationManager);
+        t.start();
     }
 }

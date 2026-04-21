@@ -19,6 +19,8 @@ public class SimulationPanel extends JPanel {
     public void updateData(Scheduler scheduler, List<Task> tasks) {
         this.scheduler = scheduler;
         this.tasks = tasks;
+
+        this.revalidate();
         this.repaint();
     }
 
@@ -41,15 +43,10 @@ public class SimulationPanel extends JPanel {
         x = 0;
         y = 20;
 
-        if (!tasks.isEmpty()) {
+        if (tasks != null && !tasks.isEmpty()) {
             for (Task task : tasks) {
                 drawRectangle(g2d, x, y, task.toString());
                 x += task.toString().length() + rectangleWidth;
-
-                if (x > getWidth()) {
-                    x = 0;
-                    y += rectangleHeight + 20;
-                }
             }
         }
     }
@@ -68,11 +65,6 @@ public class SimulationPanel extends JPanel {
                 for (Task task : server.getTasks()) {
                     drawRectangle(g2d, x, y, task.toString());
                     x += rectangleWidth + task.toString().length() + 20;
-
-                    if (x > getWidth()) {
-                        x = 0;
-                        y += rectangleHeight + 20;
-                    }
                 }
 
                 x = 0;

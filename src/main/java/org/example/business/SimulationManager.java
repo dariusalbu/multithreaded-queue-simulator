@@ -16,17 +16,24 @@ public class SimulationManager implements Runnable {
     public int numberOfServers = 2;
     public int numberOfClients = 4;
 
+    SimulationFrame frame;
     private final Scheduler scheduler;
     SimulationData simulationData;
-    private final SimulationFrame frame;
     private final List<Task> tasks;
     private Scheduler.SelectionPolicy selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
 
-    public SimulationManager() {
+    public SimulationManager(SimulationFrame simulationFrame, int numberOfClients, int numberOfServers, int timeLimit, int minArrivalTime, int maxArrivalTime, int minProcessingTime, int maxProcessingTime) {
+        this.numberOfClients = numberOfClients;
+        this.numberOfServers = numberOfServers;
+        this.timeLimit = timeLimit;
+        this.minArrivalTime = minArrivalTime;
+        this.maxArrivalTime = maxArrivalTime;
+        this.minProcessingTime = minProcessingTime;
+        this.maxProcessingTime = maxProcessingTime;
         this.scheduler = new Scheduler(numberOfServers, numberOfClients);
         this.simulationData = new SimulationData(numberOfClients);
-        this.frame = new SimulationFrame();
         this.tasks = new ArrayList<Task>();
+        this.frame = simulationFrame;
         scheduler.changeStrategy(selectionPolicy);
 
         generateRandomTasks();
