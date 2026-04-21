@@ -20,12 +20,10 @@ public class SimulationManager implements Runnable {
     private final Scheduler scheduler;
     SimulationData simulationData;
     private final List<Task> tasks;
-    private Scheduler.SelectionPolicy selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
 
-    public SimulationManager(SimulationFrame simulationFrame, int numberOfClients, int numberOfServers, int timeLimit, int minArrivalTime, int maxArrivalTime, int minProcessingTime, int maxProcessingTime) {
+    public SimulationManager(SimulationFrame simulationFrame, int numberOfClients, int numberOfServers, Scheduler.SelectionPolicy selectionPolicy, int timeLimit, int minArrivalTime, int maxArrivalTime, int minProcessingTime, int maxProcessingTime) {
         this.numberOfClients = numberOfClients;
         this.numberOfServers = numberOfServers;
-        this.timeLimit = timeLimit;
         this.minArrivalTime = minArrivalTime;
         this.maxArrivalTime = maxArrivalTime;
         this.minProcessingTime = minProcessingTime;

@@ -6,11 +6,11 @@ import org.example.model.SimulationData;
 import org.example.model.Task;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Objects;
 
 public class SimulationFrame extends JFrame {
     private JPanel mainJPanel;
@@ -30,6 +30,7 @@ public class SimulationFrame extends JFrame {
     private JLabel averageServiceTimeLabel;
     private JLabel averageWaitingTimeLabel;
     private JLabel peakHourLabel;
+    private JComboBox stragegyComboBox;
     SimulationPanel simulationPanel;
 
     public SimulationFrame() {
@@ -79,6 +80,15 @@ public class SimulationFrame extends JFrame {
         String maxArrivalTimeString = maxArrivalTimeTextField.getText();
         String minArrivalTimeString = minArrivalTimeJTextField.getText();
         String timeLimitString = timeLimitJTextField.getText();
+        String stragegyString = Objects.requireNonNull(stragegyComboBox.getSelectedItem()).toString();
+        Scheduler.SelectionPolicy selectionPolicy;
+        if (stragegyString.equals("")) {
+            selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
+        }
+        else {
+            selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
+        }
+
 
         int numberOfClients = !numberOfClientsString.isEmpty() ? Integer.parseInt(numberOfClientsString) : 0;
         int numberOfServers = !numberOfClientsString.isEmpty() ? Integer.parseInt(numberOfServersString) : 0;
@@ -93,6 +103,7 @@ public class SimulationFrame extends JFrame {
                     this,
                     numberOfClients,
                     numberOfServers,
+                    selectionPolicy,
                     timeLimit,
                     minArrivalTime,
                     maxArrivalTime,
