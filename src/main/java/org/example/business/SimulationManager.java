@@ -29,8 +29,8 @@ public class SimulationManager implements Runnable {
         this.minProcessingTime = minProcessingTime;
         this.maxProcessingTime = maxProcessingTime;
         this.timeLimit = timeLimit;
-        this.scheduler = new Scheduler(numberOfServers, numberOfClients);
         this.simulationData = new SimulationData();
+        this.scheduler = new Scheduler(numberOfServers, numberOfClients, simulationData);
         this.tasks = new ArrayList<Task>();
         this.frame = simulationFrame;
         scheduler.changeStrategy(selectionPolicy);
@@ -81,8 +81,8 @@ public class SimulationManager implements Runnable {
         simulationData.setSimulationDone(true);
         frame.update(scheduler, tasks, simulationData);
 
-        System.out.println("Average Service Time: " + simulationData.getTotalServiceTime() / simulationData.getClientsServed());
-        System.out.println("Average Waiting Time: " + simulationData.getTotalWaitingTime() / simulationData.getWaitingClientsNumber());
+        System.out.println("Average Service Time: " + (float)simulationData.getTotalServiceTime() / simulationData.getClientsServed());
+        System.out.println("Average Waiting Time: " + (float)simulationData.getTotalWaitingTime() / simulationData.getWaitingClientsNumber());
         System.out.println("Peak Hour: " + simulationData.getPeakHour());
 
         scheduler.shutdown();
@@ -101,9 +101,6 @@ public class SimulationManager implements Runnable {
                 }
                 scheduler.dispatchTask(task);
                 iterator.remove();
-
-                simulationData.setTotalServiceTime(simulationData.getTotalServiceTime() + task.getServiceTime());
-                simulationData.setClientsServed(simulationData.getClientsServed() + 1);
             }
         }
     }

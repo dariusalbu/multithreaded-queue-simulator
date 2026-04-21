@@ -28,6 +28,14 @@ public class SimulationData {
         simulationDone = new AtomicBoolean(false);
     }
 
+    public synchronized void addServiceTime(int time) {
+        this.totalServiceTime.addAndGet(time);
+    }
+
+    public synchronized void incrementClientsServed() {
+        this.clientsServed.incrementAndGet();
+    }
+
     public synchronized int getWaitingClientsNumber() {
         return waitingClientsNumber.get();
     }

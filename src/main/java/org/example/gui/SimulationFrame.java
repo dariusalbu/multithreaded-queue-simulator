@@ -66,8 +66,8 @@ public class SimulationFrame extends JFrame {
         if (simulationData.isSimulationDone()) {
             statisticsJPanel.setVisible(true);
 
-            averageWaitingTimeLabel.setText("Average Service Time: " + simulationData.getTotalServiceTime() / simulationData.getClientsServed());
-            averageServiceTimeLabel.setText("Average Waiting time: " + simulationData.getTotalWaitingTime() / simulationData.getWaitingClientsNumber());
+            averageWaitingTimeLabel.setText("Average Service Time: " + (float)simulationData.getTotalServiceTime() / simulationData.getClientsServed());
+            averageServiceTimeLabel.setText("Average Waiting time: " + (float)simulationData.getTotalWaitingTime() / simulationData.getWaitingClientsNumber());
             peakHourLabel.setText("Peak Hour: " + simulationData.getPeakHour());
         }
     }
