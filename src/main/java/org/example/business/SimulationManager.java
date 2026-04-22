@@ -10,25 +10,22 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class SimulationManager implements Runnable {
-    public String outputFileName = "test3.txt";
-    PrintWriter out;
+    private final PrintWriter out;
 
-    public int timeLimit;
-    public int maxArrivalTime;
-    public int minArrivalTime;
-    public int maxProcessingTime;
-    public int minProcessingTime;
-    public int numberOfServers;
-    public int numberOfClients;
+    private final int timeLimit;
+    private final int maxArrivalTime;
+    private final int minArrivalTime;
+    private final int maxProcessingTime;
+    private final int minProcessingTime;
+    private final int numberOfClients;
 
-    SimulationFrame frame;
+    private final SimulationFrame frame;
     private final Scheduler scheduler;
-    SimulationData simulationData;
+    private final SimulationData simulationData;
     private final List<Task> tasks;
 
     public SimulationManager(SimulationFrame simulationFrame, int numberOfClients, int numberOfServers, Scheduler.SelectionPolicy selectionPolicy, int timeLimit, int minArrivalTime, int maxArrivalTime, int minProcessingTime, int maxProcessingTime) throws FileNotFoundException {
         this.numberOfClients = numberOfClients;
-        this.numberOfServers = numberOfServers;
         this.minArrivalTime = minArrivalTime;
         this.maxArrivalTime = maxArrivalTime;
         this.minProcessingTime = minProcessingTime;
@@ -39,12 +36,13 @@ public class SimulationManager implements Runnable {
         this.tasks = new ArrayList<Task>();
         this.frame = simulationFrame;
         scheduler.changeStrategy(selectionPolicy);
+        String outputFileName = "log.txt";
         this.out = new PrintWriter(outputFileName);
 
         generateRandomTasks();
     }
 
-    public void generateRandomTasks() {
+    private void generateRandomTasks() {
         Random random = new Random();
 
         for (int i = 0; i < this.numberOfClients; i++) {
@@ -64,15 +62,16 @@ public class SimulationManager implements Runnable {
 
     @Override
     public void run() {
-        while (simulationData.getCurrentTime() < timeLimit && !emptyWaitingLists()) {
+        while (simulationData.getCurrentTime() < timeLimit) {
             manageTask(simulationData.getCurrentTime());
             computePeakHour(simulationData.getCurrentTime());
 
+            if (emptyWaitingLists()) {
+                break;
+            }
+
             frame.update(scheduler, tasks, simulationData);
-            out.println("Time " + simulationData.getCurrentTime());
-            printWaitingTasks();
-            printStatus();
-            out.println();
+            writeInOutputFile();
 
             try {
                 Thread.sleep(1000);
@@ -86,6 +85,7 @@ public class SimulationManager implements Runnable {
 
         simulationData.setSimulationDone(true);
         frame.update(scheduler, tasks, simulationData);
+        writeInOutputFile();
 
         out.println("Average Service Time: " + (float)simulationData.getTotalServiceTime() / simulationData.getClientsServed());
         out.println("Average Waiting Time: " + (float)simulationData.getTotalWaitingTime() / simulationData.getWaitingClientsNumber());
@@ -95,7 +95,14 @@ public class SimulationManager implements Runnable {
         scheduler.shutdown();
     }
 
-    void manageTask(int currentTime) {
+    private void writeInOutputFile() {
+        out.println("Time " + simulationData.getCurrentTime());
+        printWaitingTasks();
+        printStatus();
+        out.println();
+    }
+
+    private void manageTask(int currentTime) {
         Iterator<Task> iterator = tasks.iterator();
 
         while (iterator.hasNext()) {
@@ -116,7 +123,7 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    void computePeakHour(int currentTime) {
+    private void computePeakHour(int currentTime) {
         int serverSize = 0;
 
         for (Server server : scheduler.getServers()) {
@@ -131,19 +138,20 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    boolean emptyWaitingLists() {
+    private boolean emptyWaitingLists() {
         boolean empty = true;
 
         for (Server server : scheduler.getServers()) {
             if (!server.getTasks().isEmpty()) {
                 empty = false;
+                break;
             }
         }
 
         return empty && tasks.isEmpty();
     }
 
-    void printWaitingTasks() {
+    private void printWaitingTasks() {
         out.println("Waiting clients:");
 
         for(Task task : this.tasks) {
@@ -158,7 +166,7 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    void printStatus() {
+    private void printStatus() {
         for (int i = 0; i < scheduler.getServers().size(); i++) {
             out.println("Queue " + (i + 1) + ": " + scheduler.getServers().get(i).getTasks());
         }

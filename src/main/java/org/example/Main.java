@@ -2,8 +2,6 @@ package org.example;
 
 import org.example.gui.SimulationFrame;
 
-import java.awt.*;
-
 public class Main {
     public static void main(String[] args) {
         new SimulationFrame();

@@ -30,7 +30,7 @@ public class SimulationPanel extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,  RenderingHints.VALUE_ANTIALIAS_ON);
 
         g2d.setColor(Color.BLACK);
-        g2d.drawString("Waiting Clients: ", 0, 12);
+        g2d.drawString("Waiting Clients (ID, Arrival Time, Service Time): ", 0, 12);
 
         int x = 0;
         int y = 0;
@@ -45,7 +45,7 @@ public class SimulationPanel extends JPanel {
 
         if (tasks != null && !tasks.isEmpty()) {
             for (Task task : tasks) {
-                drawRectangle(g2d, x, y, task.toString());
+                drawRectangle(g2d, x, y, task.toString(), Color.orange, Color.black);
                 x += rectangleWidth + 30;
             }
         }
@@ -59,11 +59,11 @@ public class SimulationPanel extends JPanel {
         if (scheduler != null) {
             for (Server server : scheduler.getServers()) {
                 String queue = "Queue " + queueNumber + ": ";
-                drawRectangle(g2d, x, y, queue);
+                drawRectangle(g2d, x, y, queue,  Color.black, Color.white);
                 x += rectangleWidth + 30;
 
                 for (Task task : server.getTasks()) {
-                    drawRectangle(g2d, x, y, task.toString());
+                    drawRectangle(g2d, x, y, task.toString(), Color.green, Color.black);
                     x += rectangleWidth + 30;
                 }
 
@@ -75,14 +75,11 @@ public class SimulationPanel extends JPanel {
         }
     }
 
-    public void drawRectangle(Graphics2D g2d, int x, int y, String text) {
-        g2d.setColor(Color.BLACK);
+    public void drawRectangle(Graphics2D g2d, int x, int y, String text, Color rectangleColor, Color textColor) {
+        g2d.setColor(rectangleColor);
         g2d.fillRect(x, y, rectangleWidth, rectangleHeight);
 
-        g2d.setColor(Color.WHITE);
-        g2d.drawRect(x, y, rectangleWidth, rectangleHeight);
-
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(textColor);
         g2d.drawString(text, x + (rectangleWidth - g2d.getFontMetrics().stringWidth(text)) / 2, y + 20);
     }
 
