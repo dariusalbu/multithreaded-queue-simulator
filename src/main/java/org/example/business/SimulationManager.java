@@ -146,6 +146,7 @@ public class SimulationManager implements Runnable {
         for (Server server : scheduler.getServers()) {
             if (!server.getTasks().isEmpty()) {
                 empty = false;
+                break;
             }
         }
 
