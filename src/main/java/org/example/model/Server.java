@@ -7,10 +7,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Server implements Runnable {
     private final BlockingQueue<Task> tasks;
     private final AtomicInteger waitingPeriod;
+    private final SimulationData simulationData;
 
-    public Server() {
+    public Server(SimulationData simulationData) {
         this.tasks = new LinkedBlockingQueue<>();
         this.waitingPeriod = new AtomicInteger(0);
+        this.simulationData = simulationData;
     }
 
     public void addTask(Task newTask) {
@@ -24,7 +26,10 @@ public class Server implements Runnable {
             try {
                 Task task = this.tasks.peek();
 
+
                 if (task != null) {
+                    int initialTime = task.getServiceTime();
+
                     while (task.getServiceTime() > 0) {
                         Thread.sleep(1000);
 
@@ -32,6 +37,9 @@ public class Server implements Runnable {
                         task.setServiceTime(task.getServiceTime() - 1);
                     }
                     this.tasks.poll();
+
+                    simulationData.addServiceTime(initialTime);
+                    simulationData.incrementClientsServed();
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

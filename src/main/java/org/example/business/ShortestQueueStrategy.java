@@ -23,4 +23,20 @@ public class ShortestQueueStrategy implements Strategy {
 
         bestServer.addTask(task);
     }
+
+    public Server getBestServer(List<Server> servers) {
+        if (servers.isEmpty()) {
+            return null;
+        }
+
+        Server bestServer = servers.get(0);
+
+        for (Server server : servers) {
+            if (server.getTasks().size() < bestServer.getTasks().size()) {
+                bestServer = server;
+            }
+        }
+
+        return bestServer;
+    }
 }

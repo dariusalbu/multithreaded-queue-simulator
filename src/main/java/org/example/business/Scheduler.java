@@ -1,6 +1,7 @@
 package org.example.business;
 
 import org.example.model.Server;
+import org.example.model.SimulationData;
 import org.example.model.Task;
 
 import java.util.ArrayList;
@@ -15,14 +16,14 @@ public class Scheduler {
     private Strategy strategy;
     private final ExecutorService executor;
 
-    public Scheduler(int maxNoServers, int maxTasksPerServer) {
+    public Scheduler(int maxNoServers, int maxTasksPerServer, SimulationData simulationData) {
         this.maxNoServers = maxNoServers;
         this.maxTasksPerServer = maxTasksPerServer;
         servers = new ArrayList<Server>();
         executor = Executors.newFixedThreadPool(maxNoServers);
 
         for (int i = 0; i < this.maxNoServers; i++) {
-            Server server = new Server();
+            Server server = new Server(simulationData);
             servers.add(server);
 
             executor.submit(server);
@@ -45,6 +46,8 @@ public class Scheduler {
     public void dispatchTask(Task task) {
         strategy.addTask(servers, task);
     }
+
+    public Server getBestServer() {return strategy.getBestServer(servers);}
 
     public List<Server> getServers() {
         return servers;
