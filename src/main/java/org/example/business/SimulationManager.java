@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class SimulationManager implements Runnable {
-    public String outputFileName = "test3.txt";
+    public String outputFileName = "log.txt";
     PrintWriter out;
 
     public int timeLimit;
@@ -64,15 +64,16 @@ public class SimulationManager implements Runnable {
 
     @Override
     public void run() {
-        while (simulationData.getCurrentTime() < timeLimit && !emptyWaitingLists()) {
+        while (simulationData.getCurrentTime() < timeLimit) {
             manageTask(simulationData.getCurrentTime());
             computePeakHour(simulationData.getCurrentTime());
 
+            if (emptyWaitingLists()) {
+                break;
+            }
+
             frame.update(scheduler, tasks, simulationData);
-            out.println("Time " + simulationData.getCurrentTime());
-            printWaitingTasks();
-            printStatus();
-            out.println();
+            writeInOutputFile();
 
             try {
                 Thread.sleep(1000);
@@ -86,6 +87,7 @@ public class SimulationManager implements Runnable {
 
         simulationData.setSimulationDone(true);
         frame.update(scheduler, tasks, simulationData);
+        writeInOutputFile();
 
         out.println("Average Service Time: " + (float)simulationData.getTotalServiceTime() / simulationData.getClientsServed());
         out.println("Average Waiting Time: " + (float)simulationData.getTotalWaitingTime() / simulationData.getWaitingClientsNumber());
@@ -93,6 +95,13 @@ public class SimulationManager implements Runnable {
 
         out.close();
         scheduler.shutdown();
+    }
+
+    void writeInOutputFile() {
+        out.println("Time " + simulationData.getCurrentTime());
+        printWaitingTasks();
+        printStatus();
+        out.println();
     }
 
     void manageTask(int currentTime) {
