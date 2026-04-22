@@ -10,25 +10,22 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class SimulationManager implements Runnable {
-    public String outputFileName = "log.txt";
-    PrintWriter out;
+    private final PrintWriter out;
 
-    public int timeLimit;
-    public int maxArrivalTime;
-    public int minArrivalTime;
-    public int maxProcessingTime;
-    public int minProcessingTime;
-    public int numberOfServers;
-    public int numberOfClients;
+    private final int timeLimit;
+    private final int maxArrivalTime;
+    private final int minArrivalTime;
+    private final int maxProcessingTime;
+    private final int minProcessingTime;
+    private final int numberOfClients;
 
-    SimulationFrame frame;
+    private final SimulationFrame frame;
     private final Scheduler scheduler;
-    SimulationData simulationData;
+    private final SimulationData simulationData;
     private final List<Task> tasks;
 
     public SimulationManager(SimulationFrame simulationFrame, int numberOfClients, int numberOfServers, Scheduler.SelectionPolicy selectionPolicy, int timeLimit, int minArrivalTime, int maxArrivalTime, int minProcessingTime, int maxProcessingTime) throws FileNotFoundException {
         this.numberOfClients = numberOfClients;
-        this.numberOfServers = numberOfServers;
         this.minArrivalTime = minArrivalTime;
         this.maxArrivalTime = maxArrivalTime;
         this.minProcessingTime = minProcessingTime;
@@ -39,6 +36,7 @@ public class SimulationManager implements Runnable {
         this.tasks = new ArrayList<Task>();
         this.frame = simulationFrame;
         scheduler.changeStrategy(selectionPolicy);
+        String outputFileName = "log.txt";
         this.out = new PrintWriter(outputFileName);
 
         generateRandomTasks();
