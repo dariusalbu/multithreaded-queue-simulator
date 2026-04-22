@@ -97,7 +97,11 @@ public class SimulationManager implements Runnable {
                 Server server = scheduler.getBestServer();
                 if (server != null) {
                     simulationData.setWaitingClientsNumber(simulationData.getWaitingClientsNumber() + 1);
-                    simulationData.setTotalWaitingTime(simulationData.getTotalWaitingTime() + server.getTasks().size());
+                    int queueServiceTime = 0;
+                    for (Task t : server.getTasks()) {
+                        queueServiceTime += t.getServiceTime();
+                    }
+                    simulationData.setTotalWaitingTime(simulationData.getTotalWaitingTime() + queueServiceTime);
                 }
                 scheduler.dispatchTask(task);
                 iterator.remove();
