@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,7 +51,11 @@ public class SimulationFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CardLayout layout = (CardLayout) mainJPanel.getLayout();
-                takeInputData();
+                try {
+                    takeInputData();
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
                 layout.next(mainJPanel);
             }
         });
@@ -61,8 +66,6 @@ public class SimulationFrame extends JFrame {
 
         simulationPanel.updateData(scheduler, tasks);
 
-        System.out.println("Simulation Done: " + simulationData.isSimulationDone());
-
         if (simulationData.isSimulationDone()) {
             statisticsJPanel.setVisible(true);
 
@@ -72,7 +75,7 @@ public class SimulationFrame extends JFrame {
         }
     }
 
-    public void takeInputData() {
+    public void takeInputData() throws FileNotFoundException {
         String numberOfClientsString = numberOfClientsJTextField.getText();
         String  numberOfServersString = numberOfServersJTextField.getText();
         String  maxProcessingTimeString = maxProcessingTimeJTextField.getText();
