@@ -42,7 +42,7 @@ public class SimulationManager implements Runnable {
         generateRandomTasks();
     }
 
-    public void generateRandomTasks() {
+    private void generateRandomTasks() {
         Random random = new Random();
 
         for (int i = 0; i < this.numberOfClients; i++) {
@@ -95,14 +95,14 @@ public class SimulationManager implements Runnable {
         scheduler.shutdown();
     }
 
-    void writeInOutputFile() {
+    private void writeInOutputFile() {
         out.println("Time " + simulationData.getCurrentTime());
         printWaitingTasks();
         printStatus();
         out.println();
     }
 
-    void manageTask(int currentTime) {
+    private void manageTask(int currentTime) {
         Iterator<Task> iterator = tasks.iterator();
 
         while (iterator.hasNext()) {
@@ -123,7 +123,7 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    void computePeakHour(int currentTime) {
+    private void computePeakHour(int currentTime) {
         int serverSize = 0;
 
         for (Server server : scheduler.getServers()) {
@@ -138,7 +138,7 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    boolean emptyWaitingLists() {
+    private boolean emptyWaitingLists() {
         boolean empty = true;
 
         for (Server server : scheduler.getServers()) {
@@ -151,7 +151,7 @@ public class SimulationManager implements Runnable {
         return empty && tasks.isEmpty();
     }
 
-    void printWaitingTasks() {
+    private void printWaitingTasks() {
         out.println("Waiting clients:");
 
         for(Task task : this.tasks) {
@@ -166,7 +166,7 @@ public class SimulationManager implements Runnable {
         }
     }
 
-    void printStatus() {
+    private void printStatus() {
         for (int i = 0; i < scheduler.getServers().size(); i++) {
             out.println("Queue " + (i + 1) + ": " + scheduler.getServers().get(i).getTasks());
         }
