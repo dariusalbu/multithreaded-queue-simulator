@@ -85,11 +85,11 @@ public class SimulationFrame extends JFrame {
         String timeLimitString = timeLimitJTextField.getText();
         String stragegyString = Objects.requireNonNull(stragegyComboBox.getSelectedItem()).toString();
         Scheduler.SelectionPolicy selectionPolicy;
-        if (stragegyString.equals("")) {
+        if (stragegyString.isEmpty()) {
             selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
         }
         else {
-            selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_TIME;
+            selectionPolicy = Scheduler.SelectionPolicy.SHORTEST_QUEUE;
         }
 
 
